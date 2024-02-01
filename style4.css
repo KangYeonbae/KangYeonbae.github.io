@@ -94,7 +94,7 @@ header q{
 	opacity:1.0;
 }
 .content {
-	background-image: url('computer-4484282_1280.jpg');
+	background-image: url('./computer-4484282_1280.jpg');
 	background-size: cover;
 	padding-top:20px;
 	padding-left:10px;
