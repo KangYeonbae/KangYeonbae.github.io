@@ -3,67 +3,74 @@
 <head>
 <meta charset="utf-8">
 <title>강연배 자소서</title>
-<link href="./style4.css" rel="stylesheet" type="text/css">
+<link href="./style5.css" rel="stylesheet" type="text/css">
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			var images = [
+				'./computer-4484282_1280.jpg',
+				'./whitespace-3435350_1280.jpg',
+				'./workbench-3430889_1280.jpg'
+			];
+			var currentImageIndex = 0;
 
+			function changeImage() {
+				currentImageIndex = (currentImageIndex + 1) % images.length;
+				$('header').css('background-image', 'url(' + images[currentImageIndex] + ')');
+			}
 
+			$('header').css('background-image', 'url(' + images[currentImageIndex] + ')');
+
+			setInterval(changeImage, 2500);
+		});
+	</script>
 </head>
-
 <body>
+<nav class="navi">
+	<ul>
+
+		<li><a href="#container_1">인적 사항</a></li>
+		<li><a href="#container_2">학력 사항</a></li>
+		<li><a href="#">1차 프로젝트</a></li>
+	</ul>
+</nav>
 <div class="container">
-		<header>
-			  <h1>데이터 분석가 지망생</h1>
-			<h2>열심히 노력하는 <q>강연배</q> 입니다.</h2>
-		</header>  
-    <nav class="navi">
-      <ul>
-        <li><a href="#">인적 사항</a></li>
-        <li><a href="#">학력 사항</a></li>
-        <li><a href="#">경력 사항</a></li>
-        <li><a href="#">보유 기술</a></li>
-      </ul>
-    </nav>
+	<header>
+		<h1>데이터 분석가 지망생</h1>
+		<h2>열심히 노력하는 <q>강연배</q> 입니다.</h2>
+	</header>
+
 	<main id = "main">
 		<section class="content">
 			<div class="container">
-				<div class="container_1">
+				<div class="container_1" id="container_1">
 				<h1>인적 사항</h1>
 				<h2>¤ 강연배</h2>
-					<p><span>안</span></p>
+					<p><span></span></p>
 				</div>
 				</div>
 			<div class="container">
-				<div class="container_2">
+				<div class="container_2" id="container_2">
 					<h1>학력 사항</h1>
 					<h2>¤ 코드랩아카데미</h2>
-					<p>코드랩 아카데미 학원에서 6개월간 풀스텍 수업을 들으며 개발자에게 꼭 필요한 프로그램스킬을 배웠습니다..</p>
+					<p>코드랩 아카데미 학원에서 6개월간 풀스텍 수업을 들으며 개발자에게 꼭 필요한 프로그램스킬을 배웠습니다.</p>
 					<p>팀 프로젝트에서도 팀장으로서 프로젝트를 잘 수행 하였습니다.</p>
-				</div>
-			</div>
-			<div class="container">
-				<div class="container_3">
-				<h1>수행 프로젝트</h1>
-				<h2>¤ 1차 프로젝트 결과물</h2>
-					<a href = "https://github.com/KangYeonbae/KangYeonbae.github.io">github 바로가기</a>
 				</div>
 			</div>
 		</section>
 	</main>
 		<aside class="sidebar">
-			<h3>보유 기술</h3>
-			<ul>
-				<li>HTML5</li>
-				<li>CSS3</li>
-				<li>BootStrap</li>
-				<li>JavaScript</li>
-				<li>jQuery</li>
-				<li>Oracle</li>
-				<li>Java</li>
-				<li>Spring</li>
-				<li>Python</li>
-				<li>Jypyter</li>
-				<li>데이터 시각화</li>
-			</ul>
+			<div class="container">
+				<div class="container_3">
+					<h1>수행 프로젝트</h1>
+					<h2>¤ 1차 프로젝트 결과물</h2>
+					<a href = "https://github.com/KangYeonbae/KangYeonbae.github.io">github 바로가기</a>
+				</div>
+				<div class="container_4">
+					<h1>프로젝트 미리보기</h1>
+					<video src="./bandicam%202024-02-01%2011-27-34-505.mp4" autoplay muted></video>
+				</div>
+			</div>
 		</aside>
 		<footer>
 			<p>오늘의 노력은 내일의 성공을 이룹니다. 계속해서 꾸준히 노력하며, 나 자신을 믿고 달려보겠습니다. </p>
