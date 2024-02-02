@@ -23,7 +23,7 @@ header h1 {
 	left: 50%;
 	transform: translate(-50%, -50%);
 	text-align: center;
-	font-size: 3em;
+	font-size: 4em;
 	color: wheat;
 	text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;
 	margin-top: 20px;
@@ -35,8 +35,9 @@ header h2 {
 	left: 50%;
 	transform: translate(-50%, -50%);
 	text-align: center;
-	font-size: 2em;
+	font-size: 3em;
 	color: black;
+	margin-top: 10px;
 	margin-bottom: 10px;
 }
 header q{
@@ -126,7 +127,7 @@ header q{
 	width: 100%;
 	height: 150px;
 	padding: 20px;
-	margin : 0 auto;
+	margin : 20px auto;
 	border:1px solid #E7E7E7
 }
 .content .container{
