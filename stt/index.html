@@ -33,32 +33,34 @@
         const chatContainer = $('#chat-container');
         let CATEGORY_STATUS = 1;
         let level1_category = 1;
+        ttsEnabled = false;
+
         const data = {
             'level1': [
                 {
-                    'name': '코드랩',
+                    'name': '신발',
                     'number': 1,
                     'message': '<br>아래에서 주제를 선택해주세요:<p>',
                     'level2': [
                         {
-                            'name': '인수님',
+                            'name': '운동화',
                             'number': 1,
-                            'message': '<br>인수님 싹 다 지우세요 에잉 쯧쯧쯧<p>'
+                            'message': '<br>저희 매장은 Nike 전문 매장입니다. 상세정보를 보여드립니다.<p>'
                         },
                         {
-                            'name': '엄현빈',
+                            'name': '구두',
                             'number': 2,
-                            'message': '<br>엄요일은 매주 금요일이에요<p>'
+                            'message': '<br>저희 매장은 수제구두 전문 매장입니다. 상세정보를 보여드립니다.<p>'
                         },
                         {
-                            'name': '교수님',
+                            'name': '샌들',
                             'number': 3,
-                            'message': '<br>교수님은 저희를 잘 가르쳐주세요.<p>'
+                            'message': '<br>저희 매장은 고급 샌들 전문 매장입니다. 상세정보를 보여드립니다.<p>'
                         },
                         {
-                            'name': '배은지',
+                            'name': '상위메뉴',
                             'number': 0,
-                            'message': '<br>은지님은 집에가고싶어요.</p>'
+                            'message': '<br> 상위 메뉴로 이동합니다. </p>'
                         }
                     ]
                 },
@@ -106,9 +108,8 @@
                 // 첫 번째 결과의 첫 번째 대안에서 전사를 추출합니다.
                 const result = event.results[0][0].transcript;
 
-                // 공백을 모두 제거하여 sendMessage 함수로 전송합니다.
-                const resultWithoutSpaces = result.replace(/\s/g, '');
-                sendMessage(resultWithoutSpaces);
+                // 추출된 텍스트를 sendMessage 함수로 전송합니다.
+                sendMessage(result);
             }
 
             // 음성 인식을 시작합니다.
@@ -116,13 +117,22 @@
             recognition.start();
         }
 
+        function textToSpeech(message){
+            const speech = new SpeechSynthesisUtterance();
+            speech.text = message;
+            window.speechSynthesis.speak(speech);
+        }
 
 
         // 메세지를 화면에 추가
         function appendMessage(sender, message) {
-            const messageElement = $('<div></div>').html(`<strong>${sender}:</strong> ${message}`);
+            const messageElement = $('<div></div>').html(`<p><strong>${sender}:</strong> ${message}`);
             chatContainer.append(messageElement);
             chatContainer.scrollTop(chatContainer.prop('scrollHeight'));
+
+            if(ttsEnabled) {
+                textToSpeech(message);
+            }
         }
 
         // 초기 환영 메세지 출력
@@ -168,7 +178,8 @@
             return found;
         }
 
-        function findByNum(userMessage) {
+        function findByNumber(userMessage) {
+            // 상위 카테고리에 대한 처리
             if (CATEGORY_STATUS === 1) {
                 level1_category = parseInt(userMessage);
                 // !isNaN(level1_category): 숫자인 조건
@@ -212,26 +223,45 @@
             let found = false;
             // 상위 및 하위 카테고리를 찾았는지 유무를 저장하는 상태변수
             // 해당 상위 카테고리를 찾지 못했을 경우 다른 안내 메세지 처리를 위한 용도
+
+            // 키워드 검색 방식
             found = findByKeyword(found, userMessage);
 
             // 메뉴 번호 검색 방식
-            if (!found) {
-                // 상위 카테고리에 대한 처리
-                findByNum(userMessage);
-
+            if (!found){
+                findByNumber(userMessage);
             }
 
-        userInput.val('');
+            // if (!found) {
+            //     // 다른 키워드에 대한 기본 응답
+            //     appendMessage('Chatbot', '죄송합니다. 입력하신 정보로는 처리할 수 없습니다.<br>');
+            // }
 
-    }
+            userInput.val('');
+        }
+
+
         // 하위 카테고리 출력
         function showSubCategories(category) {
             setTimeout(function () {
+                message = '';
                 for (let i = 0; i < category.level2.length; i++) {
-                    chatContainer.append(`${category.level2[i].number}. ${category.level2[i].name}<br>`);
+                    // 서브메뉴 메세지를 하나로 만든다.
+                    // chatContainer.append(`${category.level2[i].number}. ${category.level2[i].name}<br>`);
+                    // message = message + '신규문자';
+                    // message += '신규문자';
+                    message += `${category.level2[i].number}. ${category.level2[i].name}<br>`;
+                }
+                // chatContainer에 하나의 메세지로 갱신한다.
+                chatContainer.append(message);
+                // 하나의 메세지에 대해 음성 서비스를 제공한다.
+                if(ttsEnabled) {
+                    textToSpeech(message);
                 }
                 chatContainer.scrollTop(chatContainer.prop('scrollHeight'));
             }, 500);
+
+
         }
         // 초기 환영 메시지 출력
         showWelcomeMessage();
@@ -240,7 +270,14 @@
         let inputContainer = $('<div id="input-container"></div>').appendTo('body');
         let userInput = $('<input type="text" id="user-input" placeholder="메시지를 입력하세요">').appendTo(inputContainer);
         let sendBtn = $('<button id="send-btn">전송</button>').appendTo(inputContainer);
+
         let speechBtn = $('<button id="speech-btn">음성 입력</button>').appendTo(inputContainer); // 음성 입력 버튼 추가
+
+
+        // 음성 출력 기능 On/Off 라디오 버튼 생성
+        let ttsCheckboxContainer = $('<div id="tts-checkbox-container"></div>').appendTo(inputContainer);
+        let ttsLabel = $('<label for="tts-radio">TTS On/Off:</label>').appendTo(ttsCheckboxContainer);
+        let ttsCheckbox = $('<input type="checkbox" id="tts-checkbox" name="tts" value="tts-on">').appendTo(ttsCheckboxContainer);
 
         // 전송 버튼 클릭 이벤트
         sendBtn.click(function () {
@@ -261,6 +298,11 @@
             startSpeechRecognition();
         });
 
+        // TTS On/Off 체크 박스 변경 이벤트
+        ttsCheckbox.change(function() {
+            ttsEnabled = $('#tts-checkbox').prop('checked');
+            console.log('TTS Enabled:', ttsEnabled);
+        });
 
     });
 </script>
